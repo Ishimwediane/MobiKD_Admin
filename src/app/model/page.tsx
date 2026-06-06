@@ -82,10 +82,6 @@ export default function ModelPage() {
         <h1>AI Model Statistics</h1>
         <p>Performance metrics for the 2-stage MobileNetV2 TFLite inference pipeline.</p>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', marginBottom: 20, background: 'rgba(62,183,90,0.08)', border: '1px solid rgba(62,183,90,0.2)', borderRadius: 10, fontSize: 13, color: '#2E8F45' }}>
-        <span>📊</span>
-        <span>Model metrics are sourced from evaluation results (not stored in the live database).</span>
-      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, marginBottom: 24 }}>
         <MetricCard label="Stage 1 Accuracy"    value={`${stage1.accuracy}%`}                   icon={<Brain    size={18} color="#3EB75A" />} bg="rgba(62,183,90,0.12)"  />
@@ -125,7 +121,7 @@ export default function ModelPage() {
             <div style={{ marginTop: 20, padding: 16, borderRadius: 12, background: 'linear-gradient(135deg,rgba(62,183,90,0.08),rgba(255,140,0,0.08))', border: '1px solid rgba(62,183,90,0.15)' }}>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>Pipeline Architecture</div>
               <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                <strong style={{ color: 'var(--text-primary)' }}>Stage 1</strong> (LiteRob) validates potato leaf. Confirmed leaves pass to <strong style={{ color: 'var(--text-primary)' }}>Stage 2</strong> for 4-class disease classification.
+                <strong style={{ color: 'var(--text-primary)' }}>Stage 1</strong> (MobiKD) validates potato leaf. Confirmed leaves pass to <strong style={{ color: 'var(--text-primary)' }}>Stage 2</strong> for 4-class disease classification.
               </div>
             </div>
           </div>
