@@ -1,17 +1,18 @@
 'use client';
 
 import './globals.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import { usePathname } from 'next/navigation';
 
 const pageMeta: Record<string, { title: string; subtitle: string }> = {
-  '/':          { title: 'Hello, Admin! 👋', subtitle: 'Here\'s what\'s happening with MobiKD today.' },
+  '/':          { title: 'Hello, Admin!', subtitle: 'Here\'s what\'s happening with MobiKD today.' },
   '/users':     { title: 'User Management', subtitle: 'All registered farmers using the MobiKD app.' },
   '/scans':     { title: 'Scan History', subtitle: 'Every disease detection scan ever performed.' },
   '/diseases':  { title: 'Disease Analytics', subtitle: 'Deep-dive into potato disease patterns.' },
   '/model':     { title: 'AI Model Statistics', subtitle: 'Real-time performance of the 2-stage TFLite pipeline.' },
+  '/diagnose':  { title: 'Admin Scanner', subtitle: 'Run the AI pipeline on a leaf image directly.' },
   '/settings':  { title: 'Settings', subtitle: 'Configure your admin preferences and system options.' },
 };
 
@@ -19,6 +20,14 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const meta = pageMeta[pathname] ?? { title: 'MobiKD Admin', subtitle: '' };
+
+  // Initialize dark mode from localStorage on first render
+  useEffect(() => {
+    const saved = localStorage.getItem('mobikd-theme');
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
 
   return (
     <div className="admin-shell">

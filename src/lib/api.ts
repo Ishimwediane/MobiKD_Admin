@@ -118,15 +118,43 @@ export async function fetchAdminUsers(): Promise<AdminUser[]> {
   return data ?? [];
 }
 
+function normalizeStage1(label: string): string {
+  if (label === 'leaf') return 'Potato Leaf';
+  if (label === 'not_leaf') return 'Not Leaf';
+  return label; // Keep original if already formatted (e.g. Potato Leaf)
+}
+
+function normalizeStage2(label: string | null): string | null {
+  if (!label) return null;
+  if (label === 'healthy') return 'Healthy';
+  if (label === 'early_blight') return 'Early Blight';
+  if (label === 'late_blight') return 'Late Blight';
+  if (label === 'not_potato_leaf') return 'Not Potato Leaf';
+  return label;
+}
+
 /** Fetch all scans from the live backend. */
 export async function fetchAdminScans(): Promise<AdminScan[]> {
   const data = await getJson<AdminScan[]>('/admin/scans');
-  return data ?? [];
+  if (!data) return [];
+  return data.map(scan => ({
+    ...scan,
+    stage1_label: normalizeStage1(scan.stage1_label),
+    stage2_label: normalizeStage2(scan.stage2_label),
+  }));
 }
 
 /** Fetch aggregate stats from the live backend. */
 export async function fetchAdminStats(): Promise<AdminStats | null> {
-  return await getJson<AdminStats>('/admin/stats');
+  const stats = await getJson<AdminStats>('/admin/stats');
+  if (!stats) return null;
+  return {
+    ...stats,
+    disease_distribution: (stats.disease_distribution || []).map(d => ({
+      label: normalizeStage2(d.label) || 'Unknown',
+      count: d.count,
+    })),
+  };
 }
 
 /** Delete a user via the backend. */
@@ -140,6 +168,35 @@ export async function deleteUser(phone: string): Promise<boolean> {
     return false;
   }
 }
+
+/** Create a new user from the admin dashboard. */
+export async function createUser(phone: string, name: string, password: string): Promise<boolean> {
+  try {
+    const res = await fetchWithTimeout(`${API_BASE}/admin/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, name, password }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** Update an existing user's details from the admin dashboard. */
+export async function updateUser(oldPhone: string, phone: string, name: string, password?: string): Promise<boolean> {
+  try {
+    const res = await fetchWithTimeout(`${API_BASE}/admin/users/${encodeURIComponent(oldPhone)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, name, password: password || undefined }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 
 /** Check if the backend is reachable. */
 export async function checkBackendHealth(): Promise<boolean> {

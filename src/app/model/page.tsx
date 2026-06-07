@@ -37,7 +37,7 @@ function StageCard({ stage, label }: { stage: ModelMetrics['stage1']; label: str
         <ResponsiveContainer width="100%" height={180}>
           <RadialBarChart cx="50%" cy="50%" innerRadius="20%" outerRadius="90%" barSize={14} data={radialData} startAngle={90} endAngle={-270}>
             <RadialBar dataKey="value" cornerRadius={6} background={{ fill: '#f1f5f9' }} />
-            <Tooltip contentStyle={{ background: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10, fontSize: 12 }} formatter={(v: number) => [`${v}%`, '']} />
+            <Tooltip contentStyle={{ background: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10, fontSize: 12 }} formatter={(v: any) => [`${v}%`, '']} />
           </RadialBarChart>
         </ResponsiveContainer>
         <div style={{ marginTop: 4 }}>
