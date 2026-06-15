@@ -9,6 +9,7 @@ import {
   Settings, LogOut, ChevronLeft, ChevronRight, Microscope
 } from 'lucide-react';
 import { logout } from '@/lib/auth';
+import ConfirmDialog from './ConfirmDialog';
 
 const navItems = [
   { href: '/',          label: 'Dashboard',         icon: LayoutDashboard },
@@ -26,6 +27,7 @@ interface SidebarProps {
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
+  const [showLogout, setShowLogout] = useState(false);
 
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
@@ -84,12 +86,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <button
           className="nav-item"
           style={{ color: '#e53935' }}
-          onClick={() => {
-            if (confirm('Are you sure you want to log out?')) {
-              logout();
-              window.location.href = '/login';
-            }
-          }}
+          onClick={() => setShowLogout(true)}
           title={collapsed ? 'Logout' : undefined}
         >
           <LogOut size={18} className="nav-icon" />
@@ -109,6 +106,15 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           <span className="nav-text">Collapse</span>
         </button>
       </div>
+
+      <ConfirmDialog
+        open={showLogout}
+        title="Log out?"
+        message="You'll need to sign in again to access the dashboard."
+        confirmText="Log Out"
+        onConfirm={() => { logout(); window.location.href = '/login'; }}
+        onCancel={() => setShowLogout(false)}
+      />
     </aside>
   );
 }

@@ -149,7 +149,12 @@ body {
   gap: 2px;
   overflow-y: auto;
   overflow-x: hidden;
+  /* Hide the scrollbar so its gutter doesn't push collapsed icons off-center */
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* old Edge */
 }
+
+.sidebar-nav::-webkit-scrollbar { width: 0; height: 0; display: none; } /* Chrome/Safari */
 
 .sidebar-label {
   font-size: 10px;

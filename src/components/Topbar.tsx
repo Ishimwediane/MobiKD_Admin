@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { User, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { logout } from '@/lib/auth';
+import ConfirmDialog from './ConfirmDialog';
 
 interface TopbarProps {
   collapsed: boolean;
@@ -13,6 +14,7 @@ interface TopbarProps {
 
 export default function Topbar({ collapsed, title, subtitle }: TopbarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const now = new Date();
@@ -30,11 +32,9 @@ export default function Topbar({ collapsed, title, subtitle }: TopbarProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  function handleLogout() {
-    if (confirm('Are you sure you want to log out?')) {
-      logout();
-      window.location.href = '/login';
-    }
+  function confirmLogout() {
+    logout();
+    window.location.href = '/login';
   }
 
   return (
@@ -99,7 +99,7 @@ export default function Topbar({ collapsed, title, subtitle }: TopbarProps) {
                 <User size={14} /> Profile Settings
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={() => { setDropdownOpen(false); setShowLogout(true); }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -124,6 +124,15 @@ export default function Topbar({ collapsed, title, subtitle }: TopbarProps) {
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={showLogout}
+        title="Log out?"
+        message="You'll need to sign in again to access the dashboard."
+        confirmText="Log Out"
+        onConfirm={confirmLogout}
+        onCancel={() => setShowLogout(false)}
+      />
     </header>
   );
 }
