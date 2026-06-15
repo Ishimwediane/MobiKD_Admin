@@ -4,7 +4,8 @@ import './globals.css';
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { isAuthenticated } from '@/lib/auth';
 
 const pageMeta: Record<string, { title: string; subtitle: string }> = {
   '/':          { title: 'Hello, Admin!', subtitle: 'Here\'s what\'s happening with MobiKD today.' },
@@ -42,6 +43,36 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** Guards the dashboard: unauthenticated visitors are sent to /login. */
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
+
+  const isLoginPage = pathname === '/login';
+
+  useEffect(() => {
+    const authed = isAuthenticated();
+    if (!authed && !isLoginPage) {
+      router.replace('/login');
+      return;
+    }
+    if (authed && isLoginPage) {
+      router.replace('/');
+      return;
+    }
+    setReady(true);
+  }, [isLoginPage, router]);
+
+  // Avoid flashing protected content before the auth check resolves.
+  if (!ready) return null;
+
+  // The login page renders standalone — no sidebar/topbar shell.
+  if (isLoginPage) return <>{children}</>;
+
+  return <AdminShell>{children}</AdminShell>;
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -55,7 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <AdminShell>{children}</AdminShell>
+        <AuthGate>{children}</AuthGate>
       </body>
     </html>
   );

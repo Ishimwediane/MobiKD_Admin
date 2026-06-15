@@ -8,6 +8,7 @@ import {
   LayoutDashboard, Users, ScanLine, Bug, Brain,
   Settings, LogOut, ChevronLeft, ChevronRight, Microscope
 } from 'lucide-react';
+import { logout } from '@/lib/auth';
 
 const navItems = [
   { href: '/',          label: 'Dashboard',         icon: LayoutDashboard },
@@ -83,7 +84,12 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <button
           className="nav-item"
           style={{ color: '#e53935' }}
-          onClick={() => alert('Logout')}
+          onClick={() => {
+            if (confirm('Are you sure you want to log out?')) {
+              logout();
+              window.location.href = '/login';
+            }
+          }}
           title={collapsed ? 'Logout' : undefined}
         >
           <LogOut size={18} className="nav-icon" />

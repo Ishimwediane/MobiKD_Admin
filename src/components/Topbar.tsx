@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { User, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { logout } from '@/lib/auth';
 
 interface TopbarProps {
   collapsed: boolean;
@@ -31,8 +32,8 @@ export default function Topbar({ collapsed, title, subtitle }: TopbarProps) {
 
   function handleLogout() {
     if (confirm('Are you sure you want to log out?')) {
-      // Direct logout logic or reload
-      window.location.href = '/settings';
+      logout();
+      window.location.href = '/login';
     }
   }
 
