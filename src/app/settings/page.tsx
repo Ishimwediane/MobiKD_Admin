@@ -98,20 +98,6 @@ export default function SettingsPage() {
         {/* Left Column */}
         <form onSubmit={handleSave}>
           <SettingsSection title="Admin Profile" icon={<User size={17} color="var(--color-primary)" />}>
-            {/* Avatar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, padding: '16px', background: 'rgba(0,0,0,0.02)', borderRadius: 12 }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: 16,
-                background: 'linear-gradient(135deg, #10b981, #6366f1)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 22, fontWeight: 800, color: 'white',
-              }}>A</div>
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{adminName || 'Administrator'}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Super Admin · MobiKD System</div>
-              </div>
-            </div>
-
             <InputField label="Full Name" value={adminName} onChange={setAdminName} placeholder="Administrator" />
             <InputField label="Email Address" value={adminEmail} onChange={setAdminEmail} placeholder="admin@mobikd.rw" />
 

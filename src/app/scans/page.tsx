@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { fetchAdminScans, diseaseBadge, type AdminScan } from '@/lib/api';
 import { LoadingSpinner } from '@/components/StatusWidgets';
-import { Search, Filter, ScanLine, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
+import { Search, ScanLine, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 
 export default function ScansPage() {
   const [scans, setScans]   = useState<AdminScan[]>([]);
@@ -131,8 +131,6 @@ export default function ScansPage() {
             </select>
           </div>
         </div>
-
-        <button className="btn btn-outline"><Filter size={14} /> Export CSV</button>
       </div>
 
       <div className="card">
